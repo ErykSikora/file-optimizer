@@ -18,6 +18,13 @@ Example:
 - **width** *[default = 360]*: width of converted file *only available for image/~~video~~ type*
 - **height** *[default = 480]*: height of converted file *only available for image/~~video~~ type*
 - **compression quality** *[default = 90]*: compression quality *scale between 10-100*
+- **watermark**: centered text, protect the photo against copying
+
+### Functions (soon):
+
+- video compression
+- PDF compression
+- watermark
 
 ## Version history
 
