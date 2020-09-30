@@ -44,12 +44,11 @@ function smarty_function_optimizer($params, &$smarty){
             $image_height = imagesy($image);
             $size = image_crop_type($width, $height, $image_width, $image_height);
             $thumb = imagecreatetruecolor($width, $height);
-            $newFilename = $file[0].'-'.$width.'-'.$height.'.'.$file[1];
-            echo $newFilename;
+            $newFile = $dir.'/'.$file[0].'-'.$width.'-'.$height.'.'.$file[1];
             # resize and crop
             imagecopyresampled($thumb, $image, 0 - $size['offset_width'] / 2, 0 - $size['offset_height'] / 2, 0, 0, $size['scale_width'], $size['scale_height'], $image_width, $image_height);
-            imagejpeg($thumb, $dir.'/'.$newFilename, $quality);
-            echo $dir.$newFilename;
+            imagejpeg($thumb, $newFile, $quality);
+            return $newFile;
 
         } else {
             return false;
@@ -76,7 +75,9 @@ function smarty_function_optimizer($params, &$smarty){
 
         #TODO: File mechanics
 
-        createImage($optimizer['src'], $optimizer['dir'], $optimizer['file'], $optimizer['width'], $optimizer['height'], $optimizer['quality']);
+        $created = createImage($optimizer['src'], $optimizer['dir'], $optimizer['file'], $optimizer['width'], $optimizer['height'], $optimizer['quality']);
+        if (!$created) throw new Exception('There is an error with the file extension', 102);
+
 
     } catch (Exception $e) {
 
