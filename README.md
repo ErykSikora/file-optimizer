@@ -1,5 +1,7 @@
 # CMSMS Optimizer
 
+![CMSMS Optimizer](https://raw.githubusercontent.com/ErykSikora/file-optimizer/master/optimizer/optimizer.png)
+
 Image compression tool.
 
 ## How it works?
@@ -8,7 +10,7 @@ Image compression tool.
 2. Call plugin in code with `{optimizer}`, example below:
 
 Example:
-`{image_url src="/img/silesia.jpg" type="image" assign="converted" height=500 quality=75}`
+`{optimizer src="/img/silesia.jpg" type="image" assign="converted" height=500 quality=75}`
 
 Plugin compresses the photo, saves them to a new location and returns the link to the compressed one.
 Link: `uploads/optimizer/silesia-auto-500-75.jpg`
@@ -24,9 +26,9 @@ Plugin generates the photo
 - **height** *[default = auto]*: height of converted file *only available for image/~~video~~ type*
 - **compression quality** *[default = 90]*: compression quality *scale between 10-100*
 - ~~**watermark**: centered text, protect the photo against copying~~
-- ~~**preffix**: adds a text to the beginning of the filename ~~
+- ~~**prefix**: adds a text to the beginning of the filename~~
 - ~~**affix**: adds a text to the end of the filename (before params)~~
-- ~~**notag**: *(bool)* set to return the link itself (true) or the img tag (false) ~~
+- ~~**notag**: *(bool)* set to return the link itself (true) or the img tag (false)~~
 - ~~**title**: *only if notag == false*~~
 - ~~**alt**: *only if notag == false*~~
 
