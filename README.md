@@ -1,6 +1,6 @@
-# CMSMS Optimizer
-
 ![CMSMS Optimizer](https://raw.githubusercontent.com/ErykSikora/file-optimizer/master/optimizer/optimizer.png)
+
+# CMSMS Optimizer
 
 Image compression tool.
 
@@ -39,7 +39,17 @@ Plugin generates the photo
 - PDF compression (soon)
 - watermark (soon)
 
+### Requirements
+
+|               |Version                        |
+|---------------|-------------------------------|
+|CMSMS          |>= 2.6.x                       |
+|PHP            |>= 7.x                         |
+
+> **Note:** There's a possibility to convert for use outside of CMSMS - extract out of smarty function `function smarty_function_xxx`
+
 ## Version history
 
+- **0.3**: added validation (stop execution if file exists), added function definitions that may not appear in PHP
 - **0.2**: file savings works, added image creation mechanics
 - **0.1**: configuration, the file does not work yet
