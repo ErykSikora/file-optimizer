@@ -20,7 +20,9 @@ function smarty_function_optimizer($params, &$smarty){
     function returnImage($file, $tag) {
         if ($tag) {
             echo 'ma zwrocic sam link';
+            #TODO: returns only link
         } else {
+            #TODO: returns full <img> tag
             echo '<img src="'.$file.'">';
         }
     }
