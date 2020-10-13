@@ -15,15 +15,17 @@ function smarty_function_optimizer($params, &$smarty){
     empty($params['prefix']) ?          $optimizer['prefix'] = null :               $optimizer['prefix'] = $params['prefix'];
     empty($params['affix']) ?           $optimizer['affix'] = null :                $optimizer['affix'] = $params['affix'];
 
-    empty($params['notag']) ?           $optimizer['notag'] = false :                $optimizer['notag'] = $params['notag'];
+    $params['notag'] != false ?         $optimizer['notag'] = true :                $optimizer['notag'] = $params['notag'];
+    empty($params['title']) ?           $optimizer['title'] = false :               $optimizer['title'] = $params['title'];     // only available if notag=false
+    empty($params['alt']) ?             $optimizer['alt'] = false :                 $optimizer['alt'] = $params['alt'];         // only available if notag=false
 
-    function returnImage($file, $tag) {
+    function returnImage($file, $tag, $title, $alt) {
         if ($tag) {
-            echo 'ma zwrocic sam link';
-            #TODO: returns only link
+            return $file;
         } else {
-            #TODO: returns full <img> tag
-            echo '<img src="'.$file.'">';
+            !empty($title) ? $title = ' title="'.$title.'"' : $title = '';
+            !empty($alt) ? $alt = ' alt="'.$alt.'"' : $alt = '';
+            echo '<img src="'.$file.'"'.$title.$alt.'>';
         }
     }
 
@@ -44,7 +46,7 @@ function smarty_function_optimizer($params, &$smarty){
     $newFile = $optimizer['dir'].'/'.$file[0].'-'.$optimizer['width'].'x'.$optimizer['height'].'-'.$optimizer['quality'].'.'.$file[1]; // create a NEW FILE name
 
     // if file with the same name exists - plugin returns variable with link to smarty
-    if (file_exists($newFile)) { $smarty->assign($optimizer['assign'], $newFile); return returnImage($newFile, $optimizer['notag']); }
+    if (file_exists($newFile)) { $smarty->assign($optimizer['assign'], $newFile); return returnImage('/'.$newFile, $optimizer['notag'], $optimizer['title'], $optimizer['alt']); }
     
     # --- Basic functions
     // functions contained in this file should be built into PHP
@@ -73,7 +75,7 @@ function smarty_function_optimizer($params, &$smarty){
         $created = createImage($optimizer['src'], $newFile, $optimizer['dir'], $file, $optimizer['width'], $optimizer['height'], $optimizer['quality']);
         if (!$created) throw new Exception('There is an error with the file extension', 102);
         
-        return returnImage($newFile, $optimizer['notag']);
+        return returnImage('/'.$newFile, $optimizer['notag'], $optimizer['title'], $optimizer['alt']);
 
         #TODO: File mechanics
 
