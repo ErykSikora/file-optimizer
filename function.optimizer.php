@@ -19,17 +19,21 @@ function smarty_function_optimizer($params, &$smarty){
     empty($params['title']) ?           $optimizer['title'] = false :               $optimizer['title'] = $params['title'];     // only available if notag=false
     empty($params['alt']) ?             $optimizer['alt'] = false :                 $optimizer['alt'] = $params['alt'];         // only available if notag=false
 
-    function returnImage($file, $tag, $title, $alt) {
-        if ($tag) {
-            return $file;
-        } else {
+    function returnImage(&$smarty, $assign, $file, $tag, $title, $alt) {
+
+        if (!$tag) {
             !empty($title) ? $title = ' title="'.$title.'"' : $title = '';
             !empty($alt) ? $alt = ' alt="'.$alt.'"' : $alt = '';
-            echo '<img src="'.$file.'"'.$title.$alt.'>';
+            $file = '<img src="'.$file.'"'.$title.$alt.'>';
         }
-    }
 
-    #TODO: add: title, alt, notag
+        if (!empty($assign)) {
+            $smarty->assign($assign, $file); return;
+        } else {
+            return $file;
+        }
+
+    }
 
     // consts
     $allowed_extensions = ['jpg', 'jpeg', 'png'];
@@ -46,7 +50,7 @@ function smarty_function_optimizer($params, &$smarty){
     $newFile = $optimizer['dir'].'/'.$file[0].'-'.$optimizer['width'].'x'.$optimizer['height'].'-'.$optimizer['quality'].'.'.$file[1]; // create a NEW FILE name
 
     // if file with the same name exists - plugin returns variable with link to smarty
-    if (file_exists($newFile)) { $smarty->assign($optimizer['assign'], $newFile); return returnImage('/'.$newFile, $optimizer['notag'], $optimizer['title'], $optimizer['alt']); }
+    if (file_exists($newFile)) { return returnImage($smarty, $optimizer['assign'], '/'.$newFile, $optimizer['notag'], $optimizer['title'], $optimizer['alt']); }
     
     # --- Basic functions
     // functions contained in this file should be built into PHP
@@ -75,7 +79,7 @@ function smarty_function_optimizer($params, &$smarty){
         $created = createImage($optimizer['src'], $newFile, $optimizer['dir'], $file, $optimizer['width'], $optimizer['height'], $optimizer['quality']);
         if (!$created) throw new Exception('There is an error with the file extension', 102);
         
-        return returnImage('/'.$newFile, $optimizer['notag'], $optimizer['title'], $optimizer['alt']);
+        return returnImage($smarty, $optimizer['assign'], '/'.$newFile, $optimizer['notag'], $optimizer['title'], $optimizer['alt']);
 
         #TODO: File mechanics
 
