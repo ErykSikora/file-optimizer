@@ -19,7 +19,8 @@ function smarty_function_optimizer($params, &$smarty){
     empty($params['title']) ?           $optimizer['title'] = false :               $optimizer['title'] = $params['title'];     // only available if notag=false
     empty($params['alt']) ?             $optimizer['alt'] = false :                 $optimizer['alt'] = $params['alt'];         // only available if notag=false
 
-    require_once __DIR__.'/optimizer/optimizer.return.php'; // main return file function
+    # returns function
+    require_once __DIR__.'/optimizer/optimizer.return.php';
 
     // consts
     $allowed_extensions = ['jpg', 'jpeg', 'png'];
@@ -33,7 +34,10 @@ function smarty_function_optimizer($params, &$smarty){
     // file controller
     $optimizer['file'] = end(explode('/', $optimizer['src'])); // get file name (with ext)
     $file = explode(".",$optimizer['file']); // split the file into name and extension
-    $newFile = $optimizer['dir'].'/'.$file[0].'-'.$optimizer['width'].'x'.$optimizer['height'].'-'.$optimizer['quality'].'.'.$file[1]; // create a NEW FILE name
+    $newFile = $optimizer['dir'].'/'.$file[0].'-'.$optimizer['width'].'x'.$optimizer['height'].'-'.$optimizer['quality'].'.'.$file[count($file)-1]; // create a NEW FILE name
+
+    // returns the source file if this extension is not supported (in $allowed_extensions array)
+    if (!in_array($file[count($file)-1], $allowed_extensions)) { return returnImage($smarty, $optimizer['assign'], $optimizer['src'], $optimizer['notag'], $optimizer['title'], $optimizer['alt']); }
 
     // if file with the same name exists - plugin returns variable with link to smarty
     if (file_exists($newFile)) { return returnImage($smarty, $optimizer['assign'], '/'.$newFile, $optimizer['notag'], $optimizer['title'], $optimizer['alt']); }
@@ -53,8 +57,9 @@ function smarty_function_optimizer($params, &$smarty){
 
         # file correcting if starts with '/'
         if (strpos($optimizer['src'], '/') == 0) $optimizer['src'] = substr($optimizer['src'], 1);
-        
-        if (!file_exists($optimizer['src'])) throw new Exception('File not found', 100); #FIXME: ?
+
+        if (!file_exists($optimizer['src'])) throw new Exception('File not found: '.$optimizer['src'], 100); #FIXME: 
+        #TODO: If overwrited file exits return this link
 
         # getting file format
         $ext = getFileFormat($optimizer['src'], $allowed_extensions);
@@ -66,7 +71,7 @@ function smarty_function_optimizer($params, &$smarty){
         
         return returnImage($smarty, $optimizer['assign'], '/'.$newFile, $optimizer['notag'], $optimizer['title'], $optimizer['alt']);
 
-        #TODO: Video, PDF
+        #TODO: File mechanics
 
 
     } catch (Exception $e) {

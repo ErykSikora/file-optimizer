@@ -10,16 +10,31 @@ function getFileFormat($file, $allowed){
 }
 
 function createImage($src, $newFile, $dir, $file, $width, $height, $quality) {
-    
-    $image = @imagecreatefromjpeg($src);
-    
+
+    $count = count($file);
+
+    switch($file[1]) {
+        case 'png':
+            $image = @imagecreatefrompng($src);
+            break;
+        case 'jpg':
+        case 'jpeg':
+            $image = @imagecreatefromjpeg($src);
+            break;
+
+    }
+
     # check if $file contains two elements (name and extension)
-    if (count($file) == 2 && $image) {
+    if ($count >= 2 && $image) {
+
+        #TODO: add imagedestroy() functions
 
         $image_width = imagesx($image);
         $image_height = imagesy($image);
         $size = image_crop_type($width, $height, $image_width, $image_height);
         $thumb = imagecreatetruecolor($size['width'], $size['height']);
+
+        if ($file[$count-1] == 'png') imagefill($thumb, 0, 0, imagecolorallocate($thumb, 255, 255, 255));
 
         # resize and crop
         imagecopyresampled($thumb, $image, 0 - $size['offset_width'] / 2, 0 - $size['offset_height'] / 2, 0, 0, $size['scale_width'], $size['scale_height'], $image_width, $image_height);
