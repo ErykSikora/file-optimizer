@@ -13,7 +13,7 @@ Example:
 `{optimizer src="/img/silesia.jpg" type="image" assign="converted" height=500 quality=75}`
 
 Plugin compresses the photo, saves them to a new location and returns the link to the compressed one.
-Link: `uploads/optimizer/silesia-auto-500-75.jpg`
+Link: `uploads/optimizer/silesia-autox500-75.jpg`
 Plugin generates the photo 
 
 ## Available parameters
