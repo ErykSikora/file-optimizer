@@ -27,8 +27,6 @@ function createImage($src, $newFile, $dir, $file, $width, $height, $quality) {
     # check if $file contains two elements (name and extension)
     if ($count >= 2 && $image) {
 
-        #TODO: add imagedestroy() functions
-
         $image_width = imagesx($image);
         $image_height = imagesy($image);
         $size = image_crop_type($width, $height, $image_width, $image_height);
@@ -39,6 +37,8 @@ function createImage($src, $newFile, $dir, $file, $width, $height, $quality) {
         # resize and crop
         imagecopyresampled($thumb, $image, 0 - $size['offset_width'] / 2, 0 - $size['offset_height'] / 2, 0, 0, $size['scale_width'], $size['scale_height'], $image_width, $image_height);
         imagejpeg($thumb, $newFile, $quality);
+        imagedestroy($image);
+        imagedestroy($thumb);
         return $newFile;
 
     } else {
